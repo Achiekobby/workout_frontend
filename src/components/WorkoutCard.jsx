@@ -2,7 +2,23 @@ import React from "react";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import "../scss/WorkoutCard.scss";
-const WorkoutCard = ({ workouts }) => {
+import { useWorkoutsContext } from './../hooks/useWorkoutsContext';
+
+const WorkoutCard = ({workouts }) => {
+
+  const {dispatch} = useWorkoutsContext()
+
+  //* Deleting a workout from the list
+  const deleteWorkout = async(id)=>{
+    const response = await fetch('/api/workout/'+id,{
+      method: 'DELETE',
+    })
+    const json = await response.json()
+    if(response.ok){
+      console.log(json);
+      dispatch({type:"DELETE_WORKOUT", payload: json.workout})
+    }
+  }
   return (
     <div className="workouts">
       {workouts &&
@@ -25,7 +41,7 @@ const WorkoutCard = ({ workouts }) => {
                 </div>
                 <div className="actions">
                   <BiEdit className="edit" />
-                  <RiDeleteBin5Line className="delete" />
+                  <RiDeleteBin5Line className="delete" onClick={()=>deleteWorkout(_id)} />
                 </div>
               </div>
             </div>
