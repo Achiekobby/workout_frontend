@@ -1,25 +1,26 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect} from "react";
 import "../scss/Home.scss";
 import WorkoutCard from "../components/WorkoutCard";
 import WorkoutForm from "../components/WorkoutForm";
 import Navbar from './../components/Navbar';
-const Home = () => {
+import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 
-  //* setting a state to manage the data collected from the api
-  const[workouts, setWorkouts] = useState(null)
+const Home = () => {
+  const {workouts,dispatch} = useWorkoutsContext()
 
   //* fetching all workouts from the api
   useEffect(() => {
+
     const fetch_workouts = async()=>{
       const response = await fetch('/api/workouts')
       const json = await response.json();
 
       if(response.ok){
-        setWorkouts(json.workouts)
+        dispatch({type:"SET_WORKOUTS", payload: json.workouts})
       }
     }
     fetch_workouts()
-  }, [])
+  }, [dispatch])
   
   return (
     <>
