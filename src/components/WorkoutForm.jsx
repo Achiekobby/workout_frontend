@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../scss/WorkoutForm.scss";
-import { useWorkoutsContext } from './../hooks/useWorkoutsContext';
+import { useWorkoutsContext } from "./../hooks/useWorkoutsContext";
+import {RxDotFilled} from "react-icons/rx"
 const WorkoutForm = () => {
-
-  const { dispatch} = useWorkoutsContext()
+  const { dispatch } = useWorkoutsContext();
 
   //* states to handle the form inputs
   const [title, setTitle] = useState("");
-  const [load, setLoad] = useState('');
-  const [reps, setReps] = useState('');
+  const [load, setLoad] = useState("");
+  const [reps, setReps] = useState("");
   const [error, setError] = useState(null);
+  const [emptyFields, setEmptyFields] = useState([]);
+  const [success, setSuccess] = useState(false)
+
+  const handleSuccess = ()=>{
+    setSuccess(false)
+  }
+  useEffect(() => {
+    const timeout = setTimeout(() =>{
+      handleSuccess()
+    }, 5000)
+  
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [success])
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,14 +45,18 @@ const WorkoutForm = () => {
 
     if (!response.ok) {
       setError(json.error);
+      console.log(json.emptyFields);
+      setEmptyFields(json.emptyFields);
     }
     if (response.ok) {
+      setSuccess(true)
       setError(null);
+      setEmptyFields([]);
       setTitle("");
       setLoad("");
       setReps("");
-      console.log("new workout has been added",json);
-      dispatch({type:"CREATE_WORKOUT", payload:json})
+      console.log("new workout has been added", json);
+      dispatch({ type: "CREATE_WORKOUT", payload: json });
     }
   };
 
@@ -48,6 +68,16 @@ const WorkoutForm = () => {
             <h1>Add New Workout Routine</h1>
           </div>
           <div className="workout_form">
+          {error && (
+            <div className="error_value">
+              <p><span><RxDotFilled/></span>{error}</p>
+            </div>
+          )}
+          {success && (
+            <div className="success_value">
+              <p><span><RxDotFilled/></span>New workout routine has been added</p>
+            </div>
+          )}
             <form className="form" onSubmit={handleSubmit}>
               <div className="input_group">
                 <label htmlFor="title">Workout Title</label>
@@ -58,6 +88,7 @@ const WorkoutForm = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Workout Title..."
+                  className={emptyFields.includes("title") ? "error" : ""}
                 />
               </div>
               <div className="input_group">
@@ -69,6 +100,7 @@ const WorkoutForm = () => {
                   value={load}
                   onChange={(e) => setLoad(e.target.value)}
                   placeholder="Load in kg..."
+                  className={emptyFields.includes("load") ? "error" : ""}
                 />
               </div>
               <div className="input_group">
@@ -80,17 +112,10 @@ const WorkoutForm = () => {
                   value={reps}
                   onChange={(e) => setReps(e.target.value)}
                   placeholder="Reps..."
+                  className={emptyFields.includes("reps") ? "error" : ""}
                 />
               </div>
-              <button className="btn-button">
-                Add Workout
-              </button>
-              {
-                error &&
-                <div className="errors">
-                  <p>{error}</p>
-                </div>
-              }
+              <button className="btn-button">Add Workout</button>
             </form>
           </div>
         </div>
