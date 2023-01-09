@@ -3,6 +3,7 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import "../scss/WorkoutCard.scss";
 import { useWorkoutsContext } from './../hooks/useWorkoutsContext';
+import formatDistanceToNow from "date-fns/formatDistanceToNow"
 
 const WorkoutCard = ({workouts }) => {
 
@@ -36,7 +37,7 @@ const WorkoutCard = ({workouts }) => {
                     <p>
                       Reps: <span>{reps}</span>
                     </p>
-                    <p>Created at: <span>{createdAt}</span></p>
+                    <p>Created at: <span>{formatDistanceToNow(new Date(createdAt),{addSuffix:true})}</span></p>
                   </div>
                 </div>
                 <div className="actions">
