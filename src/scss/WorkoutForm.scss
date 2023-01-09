@@ -39,8 +39,21 @@
         height: 100%;
         margin-top: -50px;
         margin-bottom: 30px;
-        
-        
+        .error_value {
+          background: rgba(255, 0, 115, 0.135);
+          padding: 10px;
+          border-radius: 5px;
+          p {
+            color: rgb(255, 0, 85);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            span {
+              color: rgb(255, 0, 85);
+              margin-right: 5px;
+            }
+          }
+        }
         .success_value {
           background: rgba(0, 255, 0, 0.135);
           padding: 10px;
