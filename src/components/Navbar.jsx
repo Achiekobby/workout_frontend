@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/body_building.jpg";
 import "../scss/Navbar.scss";
+import { useLogout } from './../hooks/useLogout';
 const Navbar = () => {
+  const {logout} = useLogout()
   return (
     <div className="navbar">
       <div className="container">
@@ -16,6 +18,11 @@ const Navbar = () => {
                 <h3>Workout</h3>
               </Link>
             </ul>
+            <div className="auth-links">
+              <button className="btn-button" onClick={()=>logout()}>Logout</button>
+              <Link to="/login">Login</Link>
+              <Link className="btn" to="/signup">Register</Link>
+            </div>
           </div>
         </div>
       </div>
