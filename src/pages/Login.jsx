@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import "../scss/Signup.scss";
+import { useLogin } from "../hooks/useLogin";
+import { RxDotFilled } from 'react-icons/rx';
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const {login, isLoading, error} = useLogin()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
+      await login(email,password)
     } catch (error) {
       console.log(error);
     }
@@ -18,6 +23,11 @@ const Login = () => {
       <div className="form_container">
         <div className="form_card">
           <form onSubmit={handleSubmit}>
+          {error&&
+            <div className="error">
+              <p><span><RxDotFilled/></span>{error}</p>
+            </div>
+            }
             <div className="input_group">
               <label htmlFor="email">Email</label>
               <input
@@ -40,7 +50,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button className="btn-button" type="submit">
+            <button disabled={isLoading} className="btn-button" type="submit">
               Login
             </button>
           </form>

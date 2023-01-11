@@ -11,10 +11,6 @@ const Signup = () => {
     e.preventDefault();
     try {
       await signup(email, password)
-      if(!error){
-        setEmail('')
-        setPassword('')
-      }
 
     } catch (error) {
       console.log(error);
