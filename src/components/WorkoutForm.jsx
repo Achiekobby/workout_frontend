@@ -1,34 +1,39 @@
 import React, { useState, useEffect } from "react";
 import "../scss/WorkoutForm.scss";
 import { useWorkoutsContext } from "./../hooks/useWorkoutsContext";
-import {RxDotFilled} from "react-icons/rx"
+import { RxDotFilled } from "react-icons/rx";
+import useAuthContext from "./../hooks/useAuthContext";
 const WorkoutForm = () => {
   const { dispatch } = useWorkoutsContext();
-
+  const { user } = useAuthContext();
   //* states to handle the form inputs
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
   const [reps, setReps] = useState("");
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
 
-  const handleSuccess = ()=>{
-    setSuccess(false)
-  }
+  const handleSuccess = () => {
+    setSuccess(false);
+  };
   useEffect(() => {
-    const timeout = setTimeout(() =>{
-      handleSuccess()
-    }, 5000)
-  
+    const timeout = setTimeout(() => {
+      handleSuccess();
+    }, 5000);
+
     return () => {
-      clearTimeout(timeout)
-    }
-  }, [success])
-  
+      clearTimeout(timeout);
+    };
+  }, [success]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
 
     //* Default workout object to store the values of the form
     const workout = { title, load, reps };
@@ -38,6 +43,7 @@ const WorkoutForm = () => {
       body: JSON.stringify(workout),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
       },
     });
 
@@ -49,7 +55,7 @@ const WorkoutForm = () => {
       setEmptyFields(json.emptyFields);
     }
     if (response.ok) {
-      setSuccess(true)
+      setSuccess(true);
       setError(null);
       setEmptyFields([]);
       setTitle("");
@@ -68,16 +74,26 @@ const WorkoutForm = () => {
             <h1>Add New Workout Routine</h1>
           </div>
           <div className="workout_form">
-          {error && (
-            <div className="error_value">
-              <p><span><RxDotFilled/></span>{error}</p>
-            </div>
-          )}
-          {success && (
-            <div className="success_value">
-              <p><span><RxDotFilled/></span>New workout routine has been added</p>
-            </div>
-          )}
+            {error && (
+              <div className="error_value">
+                <p>
+                  <span>
+                    <RxDotFilled />
+                  </span>
+                  {error}
+                </p>
+              </div>
+            )}
+            {success && (
+              <div className="success_value">
+                <p>
+                  <span>
+                    <RxDotFilled />
+                  </span>
+                  New workout routine has been added
+                </p>
+              </div>
+            )}
             <form className="form" onSubmit={handleSubmit}>
               <div className="input_group">
                 <label htmlFor="title">Workout Title</label>
