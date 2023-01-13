@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/body_building.jpg";
 import "../scss/Navbar.scss";
+import {GoPerson} from "react-icons/go"
 
 import { useLogout } from "./../hooks/useLogout";
 import useAuthContext from "./../hooks/useAuthContext";
@@ -25,7 +26,10 @@ const Navbar = () => {
             <div className="auth-links">
               {user && (
                 <>
-                  <span>{user.email}</span>
+                  <span>
+                    <GoPerson className="person" />
+                    <p>{user.email}</p>
+                    </span>
                   <button className="btn-button" onClick={() => logout()}>
                     Logout
                   </button>
